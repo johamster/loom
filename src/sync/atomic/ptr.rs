@@ -99,6 +99,21 @@ impl<T> AtomicPtr<T> {
     /// a [`Result`] of [`Ok`]`(previous_value)` if the function returned [`Some`]`(_)`, else
     /// [`Err`]`(previous_value)`.
     #[track_caller]
+    pub fn try_update<F>(
+        &self,
+        set_order: Ordering,
+        fetch_order: Ordering,
+        f: F,
+    ) -> Result<*mut T, *mut T>
+    where
+        F: FnMut(*mut T) -> Option<*mut T>,
+    {
+        self.0.try_update(set_order, fetch_order, f)
+    }
+
+    /// An alias for [`Self::try_update`].
+    #[deprecated = "renamed to try_update for consistency"]
+    #[track_caller]
     pub fn fetch_update<F>(
         &self,
         set_order: Ordering,
@@ -108,7 +123,7 @@ impl<T> AtomicPtr<T> {
     where
         F: FnMut(*mut T) -> Option<*mut T>,
     {
-        self.0.fetch_update(set_order, fetch_order, f)
+        self.try_update(set_order, fetch_order, f)
     }
 }
 
