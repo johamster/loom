@@ -112,7 +112,7 @@ impl<T> AtomicPtr<T> {
     }
 
     /// An alias for [`Self::try_update`].
-    #[deprecated = "renamed to try_update for consistency"]
+    #[deprecated = "renamed to `try_update` for consistency"]
     #[track_caller]
     pub fn fetch_update<F>(
         &self,
